@@ -19,7 +19,7 @@ async function signup(e){
     
     }
     catch(err){
-        document.body.innerHTML+=`<br><div style="color:red;text-align:center;">${err.message}</div`;
+        document.body.innerHTML+=`<br><div style="color:red;text-align:center;">'${err}</div`;
     }
 
 }
