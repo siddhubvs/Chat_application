@@ -9,21 +9,21 @@ async function signup(e){
         password:e.target.password.value
     }
 
-    console.log(signupDetails);
+    
 
     const response=await axios.post("http://localhost:4000/user/signup",signupDetails);
 
     if(response.status===201){
-       document.body.innerHTML+=`<br><div style="color:red;text-align:center;">${response.data.message}</div`
+       alert('Successfuly signed up')
     }
     else if(response.status===404){
-        document.body.innerHTML+=`<br><div style="color:red;text-align:center;">${response.data.err}</div`
+        
+        alert('User already exists, Please Login');
     }
-    
-    }
+}
     catch(err){
-        document.body.innerHTML+=`<br><div style="color:red;text-align:center;">'${err}</div`;
-        console.log(err.data.err);
+        document.body.innerHTML+=`<br><div style="color:red;text-align:center;">${err}</div`;
+        
     }
 
 }
