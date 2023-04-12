@@ -6,6 +6,8 @@ const bodyparser=require('body-parser')
 
 const cors=require('cors')
 
+require('dotenv').config()
+
 const sequelize=require('./util/database')
 
 const User=require('./model/user');
