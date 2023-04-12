@@ -15,10 +15,11 @@ async function signup(e){
 
     if(response.status===201){
        alert('Successfuly signed up')
+       window.location.href="../Login/login.html"
     }
     else if(response.status===200){
-        
         alert('User already exists, Please Login');
+        window.location.href="../Login/login.html"
     }
 }
     catch(err){
