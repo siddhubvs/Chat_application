@@ -11,6 +11,7 @@ async function login(e){
 
     if(response.status===200){
     alert(response.data.message);
+    window.location.href='../Chat/chat.html';
     localStorage.setItem('token',response.data.token);
     }
     }
