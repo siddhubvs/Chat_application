@@ -9,7 +9,8 @@ const chat=sequelize.define('chat',{
         primaryKey:true,
         autoIncrement:true,
     },
-    message:Sequelize.STRING
+    message:Sequelize.STRING,
+    name:Sequelize.STRING,
 })
 
 
