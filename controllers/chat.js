@@ -1,6 +1,5 @@
 const Chat=require('../model/chat');
 
-const sequelize=require('../util/database');
 
 function isStringInvalid(str){
     if(str==undefined||str.length===0)
@@ -20,5 +19,13 @@ exports.postMessage=async(req,res)=>{
     }
     catch(err){
     res.status(500).json(err);
+    }
+}
+exports.getMessage=async(req,res)=>{
+    try{
+        const messages=await Chat.findAll();
+        res.status(200).json({AllChats:messages});
+    }catch(err){
+        res.status(500).json(err);
     }
 }

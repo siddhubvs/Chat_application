@@ -14,33 +14,29 @@
      margin: 10px 0;
     }
 
-    .darker {
-     border-color: #ccc;
-     background-color: #ddd;
-    }
-    .form{
+    
+    /*.form{
           margin-bottom: 10px;
           text-align: center;
-    }
+    }*/
     </style>
 </head>
 <body>
     <h1 style="text-align: center;">Chat App</h1>
-    <div class="container">
-        <p>Siddhu</p>
-    </div>
-      
-      <div class="container darker">
-        <p>Markram</p>
-      </div>
-      <div class="form">
+    <div>
     <form onsubmit="chat(event)">
         
         <input type="text" id="message" name="message" size="80" required>
-        <button type="submit">Send</button>
+        <button type="submit">Send Message</button>
     </form>
     </div>
-    <script src="./chat.js"></script>
+    <div class="container" id="messages">
+        <p id="siddhu">Siddhu's app</p>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./chat.js"></script>
+    
+    
+
 </body>
 </html>

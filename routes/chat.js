@@ -8,4 +8,6 @@ const authController=require('../middleware/auth')
 
 router.post('/postMessage',authController.authenticate,chatController.postMessage)
 
+router.get('/getMessage',authController.authenticate,chatController.getMessage);
+
 module.exports=router
