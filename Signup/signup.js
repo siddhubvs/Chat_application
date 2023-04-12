@@ -16,7 +16,7 @@ async function signup(e){
     if(response.status===201){
        alert('Successfuly signed up')
     }
-    else if(response.status===404){
+    else if(response.status===200){
         
         alert('User already exists, Please Login');
     }
