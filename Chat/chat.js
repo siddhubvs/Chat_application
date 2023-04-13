@@ -6,10 +6,20 @@ async function chat(event){
     }
     const token=localStorage.getItem('token');
     const response=await axios.post("http://localhost:4000/chat/postMessage",message,{headers:{"Authorisation":token}});
-    document.getElementById('message').innerHTML=' '
+    document.getElementById('message').value=''
 }
 
-
+async function group(event){
+    event.preventDefault();
+    const name={
+        name:event.target.groupname.value,
+    }
+    const token=localStorage.getItem('token');
+    const response=await axios.post("http://localhost:4000/group/createGroup",name,{headers:{"Authorisation":token}});
+    if(response.status===201)
+    alert('Group with name '+response.data.NewGroupDetail.name+' is created successfully');
+    document.getElementById('groupname').value='';
+}
 
 var messages=document.getElementById('messages');
 
@@ -36,8 +46,10 @@ async function getDetails(){
         for(var i=0;i<arr.length;i++){
             showChat(arr[i]);
         }
-        max=arr[arr.length-1].id;
-        }catch(err){
+        max=arr[arr.length-1]
+
+        }
+        catch(err){
             console.log(err);
         }
 }
@@ -64,3 +76,4 @@ function showChat(obj){
     var p=document.getElementById('siddhu')
     messages.insertBefore(li,p);
 }
+
