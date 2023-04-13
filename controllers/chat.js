@@ -1,6 +1,7 @@
 const Chat=require('../model/chat');
 
 const User=require('../model/user');
+const {Op}=require("sequelize");
 function isStringInvalid(str){
     if(str==undefined||str.length===0)
     return true;
@@ -23,8 +24,10 @@ exports.postMessage=async(req,res)=>{
 }
 exports.getMessage=async(req,res)=>{
     try{
-        const messages=await Chat.findAll();
-
+        const lastmessageid=+req.query.lastmessage||-1;
+        console.log(lastmessageid);
+        const messages=await Chat.findAll({where:{id:{[Op.gt]:lastmessageid}}});
+        console.log(messages);
         res.status(200).json({AllChats:messages});
     }catch(err){
         res.status(500).json(err);
