@@ -1,4 +1,4 @@
-let token = localStorage.getItem("token");
+
 let listofgrps = document.querySelector(".listofgrps");
 let searchinp=document.querySelector('#searchinp');
 let addtogroup=document.querySelector('#addtogroup');
@@ -10,10 +10,10 @@ let inptxt=document.querySelector('#inptext');
 let groupparticipants=document.querySelector('.grpparticipants');
 let pangrpname = document.querySelector("#grpname");
 let signout = document.querySelector("#signoutgrp");
-
-let nam = "";
+const token=localStorage.getItem('token');
+/*let nam = "";
 axios
-  .get("http://localhost:5555/user", {
+  .get("http://localhost:4000/user", {
     headers: { authorization: token },
   })
   .then((result) => {
@@ -24,46 +24,37 @@ axios
   .catch((err) => {
     console.log(err);
   });
+*/
 
 
-
-function grps() {
-  axios
-    .get("http://localhost:5555/getallgroups", {
-      headers: { authorization: token },
-    })
-    .then((result) => {
-      let gt = "";
-      if (result.data.length == 0) {
-        listofgrps.innerHTML = "you are not part of any group! ";
-      } else {
-        for (let i = 0; i < result.data.length; i++) {
-          gt += `
-    <div style="border-bottom:1px solid black; padding:6px;">
-    <a style="color:blue; text-decoration:none;" href="groupchat.html?g=${result.data[i].groupId}">${result.data[i].groupname}</a>
-    </div>
+async function grps() {
+  try{
+    
+    const response=await axios.get("http://localhost:4000/group/getGroups",{headers:{"Authorisation":token}})
+    let gt='';
+    if(response.data.GroupDetails.length==0){
+      listofgrps.innerHTML='you are not part of any group! ';
+    }
+    else{
+    for(let i=0;i<response.data.GroupDetails.length;i++){
+    gt+=`
+        <div style="border-bottom:1px solid white; padding:6px;">
+        <a style="color:blue; text-decoration:none;" href="../Groupchat/groupchat.html?g=${response.data.GroupDetails[i].groupId}">${response.data.GroupDetails[i].groupname}</a>
+        </div>
     `;
-        }
-        listofgrps.innerHTML = gt;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    }  
+    listofgrps.innerHTML=gt;   
+    }   
+        
+    }
+    catch(err){
+        console.log(err);
+    }
 }
 
 grps();
 
 
-
-searchinp.addEventListener('keyup',(e)=>{
-
-    if(e.key=='Enter'){
-    let val=searchinp.value;
-
-    window.find(val);
-    }
-});
 
 
 addtogroup.addEventListener('click',()=>{
@@ -75,8 +66,8 @@ addtogroup.addEventListener('click',()=>{
   admin:adminvalue.value
  }
 
- axios.post(`http://localhost:5555/addparticipants/${id}`, obj, {
-   headers: { authorization: token },
+ axios.post(`http://localhost:4000/group/addMember/${id}`, obj,
+  {headers:{"Authorisation":token}
  }).then(result=>{
 
   alert(result.data);
@@ -89,61 +80,48 @@ addtogroup.addEventListener('click',()=>{
   
 });
 
-sendmessage.addEventListener('click',()=>{
- let id = location.href.split("g=")[1];
-
+sendmessage.addEventListener('click',async ()=>{
+  try{
+  let id = location.href.split("g=")[1];
   let inptxtvalue=inptxt.value;
-  let obj={
-msg:inptxtvalue
-  }
+  let obj={msg:inptxtvalue}
 
-  axios
-    .post(`http://localhost:5555/postgroupmsgs/${id}`, obj, {
-      headers: { authorization: token },
-    })
-    .then((result) => {
-      console.log(result);
-      inptxt.value="";
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const response=await axios.post(`http://localhost:4000/group/postMessage/${id}`,obj,{headers:{"Authorisation":token}})
+if(response.status===201){
+console.log(response.data);
+inptxt.value="";
+}
+  }
+catch(err){
+  console.log(err);
+}
 })
 
 
-setInterval(() => {
+setInterval(async () => {
+  try{
    let id = location.href.split("g=")[1];
 
-  axios.get(`http://localhost:5555/getgrpmsgs/${id}`, {
-    headers: { authorization: token }
-  }).then(result=>{
+await axios.get(`http://localhost:4000/group/getMessages/${id}`,{headers:{"Authorisation":token}})
+.then(result=>{
     let klu="";
     for(let i=0;i<result.data.length;i++){
-if (result.data[i].username == nam) {
+ 
   klu += `
             <div class="p-2 indimsg " style="background:black;border-bottom:1px dotted snow; color:snow; border-radius:3px; ">
-            <span style="margin-left:30%;" >you : 
+            <span>${result.data[i].username}:
         </span>
             <span>${result.data[i].message}</span>
             </div>
             `;
-} else {
-  klu += `
-            <div class="p-2 indimsg " style="background:rgb(8, 87,87); color:snow; border-bottom:1px solid white; border-radius:3px; ">
-            <span  >${result.data[i].username} : 
-        </span>
-            <span>${result.data[i].message}</span>
-            </div>
-            `;
-}
+} 
       
-    }
+
     groupmessages.innerHTML=klu;
-  })
-  .catch(err=>{
+})
+  }catch(err){
     console.log(err);
-  })
-  
+  }
 }, 700);
 
 
@@ -151,9 +129,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    let id = location.href.split("g=")[1];
 
 
-  axios.get(`http://localhost:5555/grpparticipants/${id}`, {
-    headers: { authorization: token },
-  }).then(result=>{
+  axios.get(`http://localhost:4000/group/getMembers/${id}`, {headers:{"Authorisation":token}})
+  .then(result=>{
     let listpar="";
     console.log(result.data[0].name);
 
@@ -175,7 +152,7 @@ listpar += `
     <div style="border-bottom:1px solid black; padding:6px; display:flex;">
     <h6 style="color:blue; text-decoration:none;">${nameusershort}</h6>
     <button style="border:none;background-color:green;color:white;padding:4px; border-radius:5px; margin-left:10px;" class=" makeadmin" id="${result.data[i].userId}">make admin</button>
-       <button style="border:none;background-color:red;color:white; padding:3px; border-radius:5px; margin-left:8px;" class="rempeople" id="${result.data[i].userId}">remove</button>
+    <button style="border:none;background-color:red;color:white; padding:3px; border-radius:5px; margin-left:8px;" class="rempeople" id="${result.data[i].userId}">remove</button>
 
     </div>
 `;
@@ -193,10 +170,9 @@ listpar += `
 function grpdat(){
      let id = location.href.split("g=")[1];
 
-  axios.get(`http://localhost:5555/getgrpname/${id}`, {
-    headers: { authorization: token },
-  }).then(result=>{
-   pangrpname.innerHTML= result.data.groupname;
+  axios.get(`http://localhost:4000/group/getGroupName/${id}`,{headers:{"Authorisation":token}})
+  .then(result=>{
+   pangrpname.innerHTML= result.data.name;
 
   })
   .catch(err=>{
@@ -214,12 +190,11 @@ groupparticipants.addEventListener('click',(e)=>{
 
     let idd=e.target.id;
     let obj={
-      useridupdate:idd
+      userid:idd
     }
 
-    axios.post(`http://localhost:5555/makeuseradmin/${id}`, obj, {
-      headers: { authorization: token },
-    }).then(result=>{
+    axios.post(`http://localhost:4000/group/makeAdmin/${id}`,obj,{headers:{"Authorisation":token}})
+    .then(result=>{
 alert(result.data);
 location.reload();
     })
@@ -228,16 +203,14 @@ location.reload();
     })
   }
 
+
     if (e.target.classList.contains("rempeople")) {
       let iddd = e.target.id;
       let obj = {
-        useriddel: iddd,
+        userid: iddd,
       };
 
-      axios
-        .post(`http://localhost:5555/removepart/${id}`, obj, {
-          headers: { authorization: token },
-        })
+      axios.post(`http://localhost:4000/group/removeMember/${id}`,obj,{headers:{"Authorisation":token}})
         .then((result) => {
           alert(result.data);
           location.reload();
@@ -246,7 +219,8 @@ location.reload();
           console.log(err.data);
         });
     }
+  })
 
 
 
-});
+

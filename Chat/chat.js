@@ -9,17 +9,6 @@ async function chat(event){
     document.getElementById('message').value=''
 }
 
-async function group(event){
-    event.preventDefault();
-    const name={
-        name:event.target.groupname.value,
-    }
-    const token=localStorage.getItem('token');
-    const response=await axios.post("http://localhost:4000/group/createGroup",name,{headers:{"Authorisation":token}});
-    if(response.status===201)
-    alert('Group with name '+response.data.NewGroupDetail.name+' is created successfully');
-    document.getElementById('groupname').value='';
-}
 
 var messages=document.getElementById('messages');
 
@@ -46,27 +35,25 @@ async function getDetails(){
         for(var i=0;i<arr.length;i++){
             showChat(arr[i]);
         }
-        max=arr[arr.length-1]
-
-        }
-        catch(err){
+        max=arr[arr.length-1].id;
+        }catch(err){
             console.log(err);
         }
+	
 }
 
 setInterval(async ()=>{
     const token=localStorage.getItem('token');
-    
+
     const response=await axios.get(`http://localhost:4000/chat/getMessage?lastmessage=${max}`,{headers:{"Authorisation":token}});
         for(var i=0;i<=response.data.AllChats.length-1;i++){
         showChat(response.data.AllChats[i]);
         console.log(response.data.AllChats[i].id)
         }
-        
+
     max=response.data.AllChats[response.data.AllChats.length-1].id;
     console.log(max);
 },1000);
-
 function showChat(obj){
     var li=document.createElement('p');
     li.style.fontSize='20px';

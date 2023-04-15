@@ -10,6 +10,18 @@ router.post('/createGroup',authController.authenticate,groupController.createGro
 
 router.get('/getGroups',authController.authenticate,groupController.getGroups);
 
-router.post('/addUser',authController.authenticate,groupController.addUser);
+router.post('/addMember/:id',authController.authenticate,groupController.addMember);
+
+router.post('/postMessage/:id',authController.authenticate,groupController.postMessage);
+
+router.get('/getMessages/:id',authController.authenticate,groupController.getMessages);
+
+router.get('/getMembers/:id',authController.authenticate,groupController.getMembers);
+
+router.post('/makeAdmin/:id',authController.authenticate,groupController.makeAdmin);
+
+router.post('/removeMember/:id',authController.authenticate,groupController.removeMember);
+
+router.get('/getGroupName/:id',authController.authenticate,groupController.getGroupName);
 
 module.exports=router
